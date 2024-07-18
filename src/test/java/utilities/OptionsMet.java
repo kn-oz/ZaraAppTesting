@@ -6,6 +6,7 @@ import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.nativekey.AndroidKey;
 import io.appium.java_client.android.nativekey.KeyEvent;
 import org.junit.Assert;
+import org.openqa.selenium.By;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Pause;
@@ -143,10 +144,9 @@ public class OptionsMet {
     }
 
 
-    public static void VerifyElementText(String description) {
+    public static void VerifyElementText(String text) {
         AndroidDriver driver = (AndroidDriver) getAppiumDriver();
-        WebElement webElement = driver.findElement(MobileBy.AndroidUIAutomator(
-                "new UiSelector().description(\"" + description + "\")"));
+        WebElement webElement = driver.findElement(By.xpath("//*[@text='" + text + "']"));
         assertTrue(webElement.isDisplayed());
 
     }

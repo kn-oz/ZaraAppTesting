@@ -28,9 +28,8 @@ public class Driver {
                 case "Android":
                     options = new UiAutomator2Options();
                     options.setPlatformName("Android").setAutomationName("UiAutomator2");
-                    options.setApp("src/test/java/Apps/querycart2006.apk");
-                    options.setAppPackage("com.wise.querycart");
-                    options.setAppActivity("com.wise.querycart.MainActivity");
+                    options.setAppPackage("com.inditex.zara");
+                    options.setAppActivity("com.inditex.zara.MainActivity");
                     options.setUdid("emulator-5554");
                     options.setNoReset(false);
                     options.setNewCommandTimeout(Duration.ofMinutes(20));

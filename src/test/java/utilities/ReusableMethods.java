@@ -2,28 +2,27 @@ package utilities;
 import io.appium.java_client.*;
 import io.appium.java_client.remote.AndroidMobileCapabilityType;
 import io.appium.java_client.remote.MobileCapabilityType;
-import io.appium.java_client.touch.ActionOptions;
 import io.appium.java_client.touch.WaitOptions;
 import io.appium.java_client.touch.offset.PointOption;
 import org.apache.commons.io.FileUtils;
-import org.junit.Test;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Pause;
 import org.openqa.selenium.interactions.PointerInput;
 import org.openqa.selenium.interactions.Sequence;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import static io.appium.java_client.AppiumBy.androidUIAutomator;
 import static java.time.Duration.ofMillis;
 import static java.util.Collections.singletonList;
 import static utilities.Driver.getAppiumDriver;
 
 import io.appium.java_client.android.AndroidDriver;
-import io.appium.java_client.android.options.UiAutomator2Options;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
+import javax.sound.midi.InvalidMidiDataException;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.Date;
@@ -39,7 +38,7 @@ public class ReusableMethods {
         desiredCapabilities.setCapability(AndroidMobileCapabilityType.APP_ACTIVITY, ConfigReader.getProperty("appActivity"));
     }
     public static void elementClick(WebElement elementName) {
-        var el1 = getAppiumDriver().findElement(AppiumBy.androidUIAutomator("new UiSelector().className(\"" + elementName + "\").instance(0)"));
+        var el1 = getAppiumDriver().findElement(androidUIAutomator("new UiSelector().className(\"" + elementName + "\").instance(0)"));
         el1.click();
     }
     public static void koordinatTiklama(int xKoordinat, int yKoordinat, int bekleme, WebElement slider) throws InterruptedException {
@@ -61,14 +60,26 @@ public class ReusableMethods {
         action.press(PointOption.point(x, y)).release().perform();
         Thread.sleep(1000);
     }
-    public static void scrollWithUiScrollableAndClick(String elementText) {
+    public static void clickVisibleTextButton(String elementText) {
         AndroidDriver driver = (AndroidDriver) Driver.getAppiumDriver();
-        //  driver.findElement(AppiumBy.ByAndroidUIAutomator("new UiScrollable(new UiSelector()).scrollIntoView(text(\"" + elementText + "\"))");
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@text='" + elementText + "']")));
         driver.findElement(By.xpath("//*[@text='" + elementText + "']")).click();
     }
-    public static void scrollWithUiScrollable(String elementText) {
-        AndroidDriver driver = (AndroidDriver) getAppiumDriver();
-        //   driver.findElement(AppiumBy.ByAndroidUIAutomator("new UiScrollable(new UiSelector()).scrollIntoView(text(\"" + elementText + "\"))"));
+
+
+    public static WebElement scrollAndSearchElement(String elementText) {
+        // Scroll and search for element by text
+        WebElement element = null;
+        try {
+            // Try to find the element by scrolling to it
+            element = getAppiumDriver().findElement(MobileBy.AndroidUIAutomator(
+                    "new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().text(\"" + elementText + "\"))"));
+        } catch (Exception e) {
+            // Handle any exception if the element is not found
+            System.out.println("Element with text '" + elementText + "' not found after scrolling.");
+        }
+        return element;
     }
     public static String getScreenshot(String name) throws IOException {
         // naming the screenshot with the current date to avoid duplication
@@ -98,4 +109,49 @@ public class ReusableMethods {
             e.printStackTrace();
         }
     }
+
+    public static void scrollToElement(String button) throws InvalidMidiDataException {
+        boolean isElementFound = false;
+        while (!isElementFound) {
+            try {
+                WebElement element = getAppiumDriver().findElement( By.xpath("//*[@text='" + button + "']"));
+                if (element.isDisplayed()) {
+                    isElementFound = true;
+                }
+            } catch (Exception e) {
+                // Perform scroll action
+                int startX = getAppiumDriver().manage().window().getSize().width / 2;
+                int startY = (int) (getAppiumDriver().manage().window().getSize().height * 0.8);
+                int endY = (int) (getAppiumDriver().manage().window().getSize().height * 0.2);
+                OptionsMet.swipe(startX, startY, startX, endY);
+            }
+        }
+    }
+    public static void swipeRight(int startX, int startY) {
+        int width = getAppiumDriver().manage().window().getSize().width;
+
+        new TouchAction<>((PerformsTouchActions) getAppiumDriver())
+                .press(PointOption.point(startX, startY))
+                .waitAction(WaitOptions.waitOptions(Duration.ofMillis(500)))
+                .moveTo(PointOption.point(width - 1, startY))  // Swipe to the end of the screen horizontally
+                .release()
+                .perform();
+    }
+
+    // Scroll to element using swipe right from startX, startY until element is found
+    public static void swipeToElement(By productElement, int startX, int startY) {
+        boolean isElementFound = false;
+        while (!isElementFound) {
+            try {
+                WebElement element = getAppiumDriver().findElement(productElement);
+                if (element.isDisplayed()) {
+                    isElementFound = true;
+                }
+            } catch (Exception e) {
+                // Perform swipe right action from startX, startY
+                swipeRight(startX, startY);
+            }
+        }
+    }
 }
+
