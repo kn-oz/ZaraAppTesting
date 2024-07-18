@@ -127,6 +127,27 @@ public class ReusableMethods {
             }
         }
     }
+
+    public static void swipeToElement(String button,int swipeCoordinateY) throws InvalidMidiDataException {
+        boolean isElementFound = false;
+        while (!isElementFound) {
+            try {
+                WebElement element = getAppiumDriver().findElement( By.xpath("//*[@text='" + button + "']"));
+                if (element.isDisplayed()) {
+                    isElementFound = true;
+                }
+            } catch (Exception e) {
+                // Perform scroll action
+                int startX = getAppiumDriver().manage().window().getSize().width / 2;
+                int startY = (int) (getAppiumDriver().manage().window().getSize().height * 0.8);
+                int endY = (int) (getAppiumDriver().manage().window().getSize().height * 0.2);
+                OptionsMet.swipe(1100, swipeCoordinateY, 400, swipeCoordinateY);
+            }
+        }
+    }
+
+
+
     public static void swipeRight(int startX, int startY) {
         int width = getAppiumDriver().manage().window().getSize().width;
 
@@ -138,20 +159,6 @@ public class ReusableMethods {
                 .perform();
     }
 
-    // Scroll to element using swipe right from startX, startY until element is found
-    public static void swipeToElement(By productElement, int startX, int startY) {
-        boolean isElementFound = false;
-        while (!isElementFound) {
-            try {
-                WebElement element = getAppiumDriver().findElement(productElement);
-                if (element.isDisplayed()) {
-                    isElementFound = true;
-                }
-            } catch (Exception e) {
-                // Perform swipe right action from startX, startY
-                swipeRight(startX, startY);
-            }
-        }
-    }
+
 }
 

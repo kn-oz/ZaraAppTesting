@@ -10,11 +10,16 @@ Feature: Navigate through the ZARA app to the Shoes Section
     * User clicks the "MENU" button
     * User clicks the "SALE" button
     * User clicks the "From 50% Off" button
-    * User scroll to the "COMBO BOXER PANTS" button
-    * User clicks the "PANTS" button
+    * User swipe from 300 to the "SHOES  | BAGS" button
+    * User clicks the "SHOES  | BAGS" button
+    * User clicks the "COLOR" button
+    * User clicks the "BLUE" button
+    * User clicks the "VIEW RESULTS (6)" button
+    * User scroll to the "TALL FABRIC BOOTS" button
+    * User clicks the "TALL FABRIC BOOTS" button
     * User scroll to the "CHECK IN-STORE AVAILABILITY" button
     * User clicks the "CHECK IN-STORE AVAILABILITY" button
-    * User clicks the "XS" button
+    * User clicks the "6" button
     * User clicks the "CHECK AVAILABILITY" button
     * User clicks the "SEARCH FOR TOWN, STREET, POSTAL CODE…" button
     * User opens keyboard and type ""

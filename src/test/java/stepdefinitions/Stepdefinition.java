@@ -38,10 +38,10 @@ public class Stepdefinition extends OptionsMet {
         OptionsMet.VerifyElementText(string);
 
     }
-    @Given("User swipe from {int},{int} to the {string} button")
-    public void user_swipe_from_to_the_button(int x,int y, String button) {
+    @Given("User swipe from {int} to the {string} button")
+    public void user_swipe_from_to_the_button(int y, String button) throws InvalidMidiDataException {
         By productElement = By.xpath("//*[@text='" + button + "']");
-        ReusableMethods.swipeToElement(productElement,x,y);
+        ReusableMethods.swipeToElement(button,y);
     }
 
 }
