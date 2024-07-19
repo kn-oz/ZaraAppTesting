@@ -5,6 +5,7 @@ import io.appium.java_client.android.nativekey.AndroidKey;
 import io.appium.java_client.android.nativekey.KeyEvent;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
+import org.junit.Assert;
 import org.openqa.selenium.By;
 import utilities.*;
 
@@ -43,6 +44,21 @@ public class Stepdefinition extends OptionsMet {
         By productElement = By.xpath("//*[@text='" + button + "']");
         ReusableMethods.swipeToElement(button,y);
     }
+
+    @Given("User list all products on product listing page")
+    public void user_list_all_products_on_product_listing_page() {
+        ReusableMethods.getAllProducts();
+    }
+
+    @Given("User list all products on product listing page and verify product count is {int}")
+    public void user_list_all_products_on_product_listing_page_and_verify_product_count_is(Integer int1) {
+        int actualProductCount =ReusableMethods.getAllProductsCount();
+        int expectedProductCount= int1;
+        Assert.assertEquals(expectedProductCount,actualProductCount);
+        System.out.println("expected count is: "+int1+" actual count is: "+actualProductCount);
+
+    }
+
 
 }
 

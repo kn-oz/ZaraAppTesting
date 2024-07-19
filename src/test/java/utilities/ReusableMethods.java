@@ -26,6 +26,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 public class ReusableMethods {
     private static DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
     public static void apkYukle() {
@@ -158,6 +161,73 @@ public class ReusableMethods {
                 .release()
                 .perform();
     }
+    public static void getAllProducts() {
+        Set<String> allProductDetails = new HashSet<>();
+        boolean loadMore = true;
+        int initialSize;
+        int newSize;
+
+        while (loadMore) {
+            List<WebElement> productContainers = getAppiumDriver().findElements(By.xpath("//*[@resource-id='com.inditex.zara:id/product_info_product_name']"));
+            initialSize = allProductDetails.size();
+
+            for (WebElement container : productContainers) {
+                String productName = container.getText();
+                allProductDetails.add(productName);
+            }
+
+            scrollDown();
+            newSize = allProductDetails.size();
+
+            // If no new products are added, assume end of list
+            loadMore = newSize > initialSize;
+        }
+
+        for (String productDetail : allProductDetails) {
+            System.out.println(productDetail);
+        }
+    }
+    public static boolean scrollDown() {
+        try {
+            int startX = getAppiumDriver().manage().window().getSize().width / 2;
+            int startY = (int) (getAppiumDriver().manage().window().getSize().height * 0.8);
+            int endY = (int) (getAppiumDriver().manage().window().getSize().height * 0.2);
+            OptionsMet.swipe(startX, startY, startX, endY);
+            return true;
+        } catch (Exception e) {
+            return false; // No more scrolling possible
+        }
+    }
+    public static int getAllProductsCount() {
+        Set<String> allProductDetails = new HashSet<>();
+        boolean loadMore = true;
+        int initialSize;
+        int newSize;
+
+        while (loadMore) {
+            List<WebElement> productContainers = getAppiumDriver().findElements(By.xpath("//*[@resource-id='com.inditex.zara:id/product_info_product_name']"));
+            initialSize = allProductDetails.size();
+
+            for (WebElement container : productContainers) {
+                String productName = container.getText();
+                allProductDetails.add(productName);
+            }
+
+            ReusableMethods.wait(1);
+            scrollDown();
+            newSize = allProductDetails.size();
+
+            // If no new products are added, assume end of list
+            loadMore = newSize > initialSize;
+        }
+
+        for (String productDetail : allProductDetails) {
+            System.out.println(productDetail);
+        }
+
+        return allProductDetails.size();
+    }
+
 
 
 }
